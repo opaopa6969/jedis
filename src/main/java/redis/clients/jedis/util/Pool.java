@@ -1,6 +1,8 @@
 package redis.clients.jedis.util;
 
 import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -12,6 +14,9 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.exceptions.JedisExhaustedPoolException;
 
 public abstract class Pool<T> implements Closeable {
+	
+  public static final List<GenericObjectPool<?>> pools = new ArrayList<>();
+  
   protected GenericObjectPool<T> internalPool;
 
   /**
@@ -43,6 +48,7 @@ public abstract class Pool<T> implements Closeable {
     }
 
     this.internalPool = new GenericObjectPool<T>(factory, poolConfig);
+    pools.add(this.internalPool);
   }
 
   public T getResource() {
